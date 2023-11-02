@@ -101,12 +101,12 @@ Enter the profits of items : 10 15 10 12 8
 Enter the weights of items : 3 3 2 5 1
 
 Enter capacity of Knapscack : 10
-| Items  |  PT  |  Wt  |P/WT |
-| I - 0  |  8   |   1  |  8	 |
-| I - 1  |  15  |   3  |  5	 |
-| I - 2  |  10  |   2  |  5	 |
-| I - 3  |  10  |   3  |  3	 |
-| I - 4  |  12  |   5  |  2	 |
+| Items  |  PT  |  Wt  |P/WT	|
+| I - 0  |  8   |   1  |  8	|
+| I - 1  |  15  |   3  |  5	|
+| I - 2  |  10  |   2  |  5	|
+| I - 3  |  10  |   3  |  3	|
+| I - 4  |  12  |   5  |  2	|
 
 Maximum profit : 45.4
 
