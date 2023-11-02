@@ -1,78 +1,118 @@
-#include <iostream>
-#include <algorithm>
-using namespace std;
+#include <stdio.h>
 
-double fractional_knapsack(int wt[], int val[], int num, int cp) {
-  // Sort the items in decreasing order of value per weight.
-  double new_arr[num];
-  for (int i = 0; i < num; i++) {
-    new_arr[i] = (wt[i]) / (val[i]);
-  }
+void knapsack(int n, float capacity, float weights[], float profits[]) {
+    float solution[15], remainingCapacity, totalProfit = 0.0, totalWeight = 0.0;
+    int i;
 
-  sort(new_arr, new_arr + num, greater<>());
+    remainingCapacity = capacity;
 
-  // Initialize the total value and weight.
-  double total_value = 0.0;
-  double total_weight = 0.0;
-
-  // Iterate over the items and add them to the knapsack until the capacity is reached.
-  for (int i = 0; i < num; i++) {
-    if (total_weight + wt[i] <= cp) {
-      total_value += val[i];
-      total_weight += wt[i];
-    } else {
-      // Add a fraction of the item to the knapsack.
-      double fraction = (cp - total_weight) / wt[i];
-      total_value += fraction * val[i];
-      total_weight += fraction * wt[i];
-      break;
+    for (i = 0; i < n; i++) {
+        solution[i] = 0.0;
     }
-  }
 
-  return total_value;
+    for (i = 0; i < n; i++) {
+        if (weights[i] > remainingCapacity) {
+            break;
+        }
+        solution[i] = 1.0;
+        remainingCapacity -= weights[i];
+    }
+    
+    if (i < n) {
+        solution[i] = remainingCapacity / weights[i];
+    }
+    
+    printf("Solution Vector is : ");
+    for (i = 0; i < n; i++) {
+        printf("%d %f ", i, solution[i]);
+    }
+
+    for (i = 0; i < n; i++) {
+        weights[i] = weights[i] * solution[i];
+        profits[i] = profits[i] * solution[i];
+    }
+
+    for (i = 0; i < n; i++) {
+        totalProfit += profits[i];
+        totalWeight += weights[i];
+    }
+    
+    printf("\nMaximum profit is : %f\n", totalProfit);
+    printf("Maximum weight is : %f\n", totalWeight);
 }
 
 int main() {
-  int num, cp;
-  cout << "Enter the number of Iteams    = ";
-  cin >> num;
-  cout << "\nEnter the capacity of scack = ";
-  cin >> cp;
+    int n;
+    float profits[15], weights[15], profitToWeightRatio[15], temp, capacity;
 
-  int wt[num], val[num];
-  cout << "\nEnter the weights of Iteam = ";
-  for (int i = 0; i < num; i++) {
-    cin >> wt[i];
-  }
-  cout << "\nEnter the profit of Iteams = ";
-  for (int i = 0; i < num; i++) {
-    cin >> val[i];
-  }
+    printf("Enter the number of items: ");
+    scanf("%d", &n);
 
-  double new_arr[num];
-  for (int i = 0; i < num; i++) {
-    new_arr[i] = (wt[i]) / (val[i]);
-  }
+    printf("Enter the weights of items: ");
+    for (int i = 0; i < n; i++) {
+        scanf("%f", &weights[i]);
+    }
 
-  for (int i = 0; i < num; i++) {
-    cout << new_arr[i] << " ";
-  }
+    printf("Enter the profits of items: ");
+    for (int i = 0; i < n; i++) {
+        scanf("%f", &profits[i]);
+    }
 
-  cout << endl;
+    printf("Enter the knapsack capacity: ");
+    scanf("%f", &capacity);
 
-  double max_value = fractional_knapsack(wt, val, num, cp);
-  cout << "The maximum value that can be placed in the knapsack is: " << max_value
-       << endl;
+    for (int i = 0; i < n; i++) {
+        profitToWeightRatio[i] = profits[i] / weights[i];
+    }
 
-  return 0;
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n - 1; j++) {
+            if (profitToWeightRatio[j] < profitToWeightRatio[j + 1]) {
+
+                temp = profitToWeightRatio[j];
+                profitToWeightRatio[j] = profitToWeightRatio[j + 1];
+                profitToWeightRatio[j + 1] = temp;
+
+                temp = weights[j];
+                weights[j] = weights[j + 1];
+                weights[j + 1] = temp;
+
+                temp = profits[j];
+                profits[j] = profits[j + 1];
+                profits[j + 1] = temp;
+                
+            }
+        }
+    }
+
+    printf("\nThe items are arranged as follows:\n");
+    printf("\n\nItems\tWeight\tProfits\n");
+
+    for (int i = 0; i < n; i++) {
+        printf("%d\t%f\t%f\n", i, weights[i], profits[i]);
+    }
+
+    knapsack(n, capacity, weights, profits);
+    return 0;
 }
-
 /*
-Number of items: 3
-Capacity of knapsack: 50
-Weights: 10, 20, 30
-Values: 60, 100, 120
+Enter the number of items: 7
+Enter the weights of items: 2 3 5 7 1 4 1
+Enter the profits of items: 10 5 15 7 6 18 3
+Enter the knapsack capacity: 15
 
-0.6 0.5 0.4
-The maximum value that can be placed in the knapsack is: 240.0
+The items are arranged as follows:
+
+
+Items   Weight  Profits
+0       1.000000        6.000000  
+1       2.000000        10.000000 
+2       4.000000        18.000000
+3       5.000000        15.000000
+4       1.000000        3.000000
+5       3.000000        5.000000
+6       7.000000        7.000000
+Solution Vector is : 0 1.000000 1 1.000000 2 1.000000 3 1.000000 4 1.000000 5 0.666667 6 0.000000
+Maximum profit is : 55.333332
+Maximum weight is : 15.000000
 */
